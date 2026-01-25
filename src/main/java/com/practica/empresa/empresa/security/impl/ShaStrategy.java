@@ -1,13 +1,12 @@
-package com.practica.empresa.empresa.security;
+package com.practica.empresa.empresa.security.impl;
+
+import com.practica.empresa.empresa.security.HashStrategy;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SecurityUtilities {
-
-    private SecurityUtilities () {}
-
+public class ShaStrategy implements HashStrategy {
 
     /**
      * Generates the SHA-256 hash of a given password.
@@ -20,7 +19,7 @@ public class SecurityUtilities {
      * @return a hexadecimal string representing the SHA-256 hash of the password
      * @throws RuntimeException if the SHA-256 algorithm is not available
      */
-    public static String sha256(final String password) {
+    public String hash(final String password) {
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
             final byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -34,5 +33,6 @@ public class SecurityUtilities {
             throw new RuntimeException(e);
         }
     }
+
 
 }

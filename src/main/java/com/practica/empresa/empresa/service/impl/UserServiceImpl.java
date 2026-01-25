@@ -2,7 +2,9 @@ package com.practica.empresa.empresa.service.impl;
 
 
 import com.practica.empresa.empresa.model.User;
-import com.practica.empresa.empresa.security.SecurityUtilities;
+import com.practica.empresa.empresa.security.HashStrategy;
+import com.practica.empresa.empresa.security.impl.BCryptStrategy;
+import com.practica.empresa.empresa.security.impl.ShaStrategy;
 import com.practica.empresa.empresa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,15 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final UserRepository userRepository;
+    private final HashStrategy hashStrategy;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+       // this.hashStrategy = new ShaStrategy();
+        this.hashStrategy = new BCryptStrategy();
+    }
 
     /**
      * Attempts to log in a user with the given credentials.
@@ -32,9 +41,9 @@ public class UserServiceImpl implements UserService {
      *         {@code true} otherwise
      */
     public boolean login(final String username, final String password) {
-        Optional<User> user = userRepository.findByUsername(username);
+        final Optional<User> user = userRepository.findByUsername(username);
         if(user.isEmpty()) return false;
-        if(user.get().getPassword().equals(SecurityUtilities.sha256(password))) {
+        if(user.get().getPassword().equals(hashStrategy.hash(password))) {
             userRepository.updateLastLogin(username, LocalDateTime.now());
             return true;
         }
@@ -62,7 +71,7 @@ public class UserServiceImpl implements UserService {
             return "Usuario o contraseña no pueden estar vacíos";
 
 
-        final User newUser = new User(username, SecurityUtilities.sha256(password));
+        final User newUser = new User(username, hashStrategy.hash(password));
         userRepository.save(newUser);
         return "Usuario registrado correctamente";
     }
