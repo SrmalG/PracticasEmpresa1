@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public boolean login(final String username, final String password) {
         final Optional<User> user = userRepository.findByUsername(username);
         if(user.isEmpty()) return false;
-        if(user.get().getPassword().equals(hashStrategy.hash(password))) {
+        if(hashStrategy.check(password, user.get().getPassword())) {
             userRepository.updateLastLogin(username, LocalDateTime.now());
             return true;
         }

@@ -34,5 +34,10 @@ public class ShaStrategy implements HashStrategy {
         }
     }
 
+    @Override
+    public boolean check(final String password, final String hashed) {
+        return hashed.equals(this.hash(password));
+    }
+
 
 }

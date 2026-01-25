@@ -29,6 +29,7 @@ public class BCryptStrategy implements HashStrategy {
      * @param hashed the previously hashed password
      * @return {@code true} if the password matches the hash, {@code false} otherwise
      */
+    @Override
     public boolean check(String password, String hashed) {
         return BCrypt.checkpw(password, hashed);
     }
