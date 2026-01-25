@@ -3,8 +3,6 @@ package com.practica.empresa.empresa.service.impl;
 
 import com.practica.empresa.empresa.model.User;
 import com.practica.empresa.empresa.security.HashStrategy;
-import com.practica.empresa.empresa.security.impl.BCryptStrategy;
-import com.practica.empresa.empresa.security.impl.ShaStrategy;
 import com.practica.empresa.empresa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +19,10 @@ public class UserServiceImpl implements UserService {
     private final HashStrategy hashStrategy;
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository) {
+    public UserServiceImpl(final UserRepository userRepository, final HashStrategy hashStrategy) {
         this.userRepository = userRepository;
-       // this.hashStrategy = new ShaStrategy();
-        this.hashStrategy = new BCryptStrategy();
+        this.hashStrategy = hashStrategy;
     }
-
     /**
      * Attempts to log in a user with the given credentials.
      *

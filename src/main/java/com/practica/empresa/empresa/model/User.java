@@ -20,6 +20,8 @@ public class User {
     private LocalDateTime createdAt;
     private String password;
 
+    public User() {}
+
 
     public User(final String username, final String password) {
         this.username = username;
@@ -27,7 +29,6 @@ public class User {
         this.createdAt = LocalDateTime.now();
         this.lastLogin = LocalDateTime.now();
     }
-
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
