@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private final HashStrategy hashStrategy;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(final UserRepository userRepository) {
         this.userRepository = userRepository;
        // this.hashStrategy = new ShaStrategy();
         this.hashStrategy = new BCryptStrategy();

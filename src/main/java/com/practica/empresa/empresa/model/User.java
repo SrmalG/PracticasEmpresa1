@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 public class User {
 
     @Id
@@ -21,9 +21,7 @@ public class User {
     private String password;
 
 
-    public User() {}
-
-    public User(String username, String password) {
+    public User(final String username, final String password) {
         this.username = username;
         this.password = password;
         this.createdAt = LocalDateTime.now();

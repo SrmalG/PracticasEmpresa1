@@ -16,7 +16,7 @@ public class BCryptStrategy implements HashStrategy {
      * @return a securely hashed string representing the password
      */
     @Override
-    public String hash(String password) {
+    public String hash(final String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
@@ -30,7 +30,7 @@ public class BCryptStrategy implements HashStrategy {
      * @return {@code true} if the password matches the hash, {@code false} otherwise
      */
     @Override
-    public boolean check(String password, String hashed) {
+    public boolean check(final String password, final String hashed) {
         return BCrypt.checkpw(password, hashed);
     }
 
