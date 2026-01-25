@@ -17,13 +17,18 @@ public class User {
     private String password;
     private LocalDateTime createdAt;
 
+    @Column
+    private LocalDateTime lastLogin;
+
     public User() {}
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
         this.createdAt = LocalDateTime.now();
+        this.lastLogin = LocalDateTime.now();
     }
+
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -42,4 +47,12 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 }
