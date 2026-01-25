@@ -14,11 +14,12 @@ public class User {
 
     @Column(unique = true)
     private String username;
-    private String password;
-    private LocalDateTime createdAt;
 
     @Column
     private LocalDateTime lastLogin;
+    private LocalDateTime createdAt;
+    private String password;
+
 
     public User() {}
 

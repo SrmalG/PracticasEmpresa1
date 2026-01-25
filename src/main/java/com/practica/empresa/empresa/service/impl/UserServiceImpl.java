@@ -1,8 +1,9 @@
-package com.practica.empresa.empresa.service;
+package com.practica.empresa.empresa.service.impl;
 
 
 import com.practica.empresa.empresa.model.User;
 import com.practica.empresa.empresa.security.SecurityUtilities;
+import com.practica.empresa.empresa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.practica.empresa.empresa.repository.UserRepository;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;

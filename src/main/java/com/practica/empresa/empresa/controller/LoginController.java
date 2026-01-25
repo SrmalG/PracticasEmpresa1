@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.practica.empresa.empresa.service.UserService;
+import com.practica.empresa.empresa.service.impl.UserServiceImpl;
 
 import java.util.Map;
 
@@ -15,7 +15,8 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
+
 
 
     @PostMapping("/login")
