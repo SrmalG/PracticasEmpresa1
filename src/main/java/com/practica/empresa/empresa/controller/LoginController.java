@@ -1,18 +1,20 @@
 package com.practica.empresa.empresa.controller;
 
 
+import com.practica.empresa.empresa.dtos.DeleteUserDTO;
+import com.practica.empresa.empresa.dtos.LoginDTO;
+import com.practica.empresa.empresa.dtos.RegisterDTO;
 import com.practica.empresa.empresa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.practica.empresa.empresa.service.impl.UserServiceImpl;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @CrossOrigin
 public class LoginController {
 
@@ -21,49 +23,44 @@ public class LoginController {
     private UserService userService;
 
 
-
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody final Map<String, String> body) {
-        final String username = body.get("username");
-        final String password = body.get("password");
+    public ResponseEntity<String> login(@RequestBody final LoginDTO registerDto) {
 
-        return userService.login(username, password) ?
+        return userService.login(registerDto.getUsername(),
+                registerDto.getPassword()) ?
                 ResponseEntity.ok("✅ Login correcto") :
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario o contraseña incorrectos");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody final Map<String, String> body) {
-        final String username = body.get("username");
-        final String password = body.get("password");
-        final String result = userService.register(username, password);
+    public ResponseEntity<String> register(@RequestBody final RegisterDTO registerDto) {
+        final boolean result = userService.register(
+                registerDto.getUsername(),
+                registerDto.getPassword()
+        );
 
-        return switch (result) {
-            case "El usuario ya existe" -> ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-            case "Usuario o contraseña no pueden estar vacíos" ->
-                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-            default -> ResponseEntity.status(HttpStatus.CREATED).body(result);
-        };
+        if (result) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Usuario registrado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al registrar usuario");
+        }
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestBody final Map<String, String> body) {
-        final String username = body.get("username");
-        final String result = userService.deleteUser(username);
+    public ResponseEntity<String> deleteUser(@RequestBody final DeleteUserDTO request) {
 
-        return switch (result) {
-            case "El nombre de usuario no puede estar vacío",
-                 "El usuario no existe" -> ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(result);
-            case "Usuario eliminado correctamente" -> ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(result);
-            default -> ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error desconocido");
-        };
+        final boolean result = userService.deleteUser(request.getUsername());
+
+        if (result) {
+            return ResponseEntity.ok("Usuario eliminado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("No se pudo eliminar el usuario");
+        }
     }
+
 
 
 

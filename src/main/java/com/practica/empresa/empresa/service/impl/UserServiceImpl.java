@@ -59,17 +59,16 @@ public class UserServiceImpl implements UserService {
      * @return a message indicating the registration result:
      *
      */
-    public String register(final String username, final String password) {
-        if (userRepository.findByUsername(username).isPresent())
-            return "El usuario ya existe";
-
+    public boolean register(final String username, final String password) {
         if (username == null || username.isBlank() || password == null || password.isBlank())
-            return "Usuario o contraseña no pueden estar vacíos";
+            throw new IllegalArgumentException("Usuario o contraseña no pueden estar vacíos");
 
+        if (userRepository.findByUsername(username).isPresent())
+            throw new IllegalArgumentException("El usuario ya existe");
 
         final User newUser = new User(username, hashStrategy.hash(password));
         userRepository.save(newUser);
-        return "Usuario registrado correctamente";
+        throw new IllegalArgumentException("Usuario registrado correctamente");
     }
     /**
      * Deletes a user by username.
@@ -83,15 +82,15 @@ public class UserServiceImpl implements UserService {
      * @param username the username of the user to be deleted
      * @return a message indicating the result of the operation:
      */
-    public String deleteUser(final String username) {
+    public boolean deleteUser(final String username) {
         if (username == null || username.isBlank())
-            return "El nombre de usuario no puede estar vacío";
+            return false;
 
         if (userRepository.findByUsername(username).isEmpty())
-            return "El usuario no existe";
+            return false;
 
         userRepository.deleteUser(username);
-        return "Usuario eliminado correctamente";
+        return true;
     }
 
 }

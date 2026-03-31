@@ -11,12 +11,12 @@ public class HashConfig {
 
     @Bean
     @Primary
-    public HashStrategy shaStrategy() {
-        return new ShaStrategy();
+    public HashStrategy bCryptStrategy() {
+        return new BCryptStrategy();
     }
 
     @Bean
-    public HashStrategy bCryptStrategy() {
-        return new BCryptStrategy();
+    public HashStrategy shaStrategy() {
+        return new ShaStrategy();
     }
 }
