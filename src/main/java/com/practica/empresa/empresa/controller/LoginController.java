@@ -1,6 +1,7 @@
 package com.practica.empresa.empresa.controller;
 
 
+import com.practica.empresa.empresa.dtos.GenericResponse;
 import com.practica.empresa.empresa.dtos.in.DeleteUserDTO;
 import com.practica.empresa.empresa.dtos.in.LoginDTO;
 import com.practica.empresa.empresa.dtos.in.RegisterDTO;
@@ -37,9 +38,9 @@ public class LoginController {
                     .body(new LoginDTOOut("Usuario o contraseña incorrecta", loginDTO.getUsername()));
 
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new GenericResponse(false, e.getMessage(), null));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body(new GenericResponse(false, e.getMessage(), null));
         }
     }
 
@@ -58,9 +59,9 @@ public class LoginController {
                     .body(new RegisterDTOOut("Error while register the User", null, null));
 
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new GenericResponse(false, e.getMessage(), null));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body(new GenericResponse(false, e.getMessage(), null));
         }
     }
 
@@ -74,7 +75,7 @@ public class LoginController {
                     .body("No se pudo eliminar el usuario");
 
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new GenericResponse(false, e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
