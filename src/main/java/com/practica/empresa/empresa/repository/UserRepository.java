@@ -16,10 +16,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Transactional
     @Query(Sql.UPDATE_LAST_LOGIN)
-    void updateLastLogin(String username, LocalDateTime lastLogin);
+    void updateLastLogin(final String username, final LocalDateTime lastLogin);
 
     @Modifying
     @Transactional
     @Query(Sql.ERASE_USER)
-    void deleteUser(String username);
+    void deleteUser(final String username);
 }

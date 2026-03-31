@@ -1,4 +1,4 @@
-package com.practica.empresa.empresa.dtos;
+package com.practica.empresa.empresa.dtos.in;
 
 public class DeleteUserDTO {
 

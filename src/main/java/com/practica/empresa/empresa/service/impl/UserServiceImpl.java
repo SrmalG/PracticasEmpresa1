@@ -7,6 +7,7 @@ import com.practica.empresa.empresa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.practica.empresa.empresa.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -37,12 +38,18 @@ public class UserServiceImpl implements UserService {
      *         {@code true} otherwise
      */
     public boolean login(final String username, final String password) {
-        final Optional<User> user = userRepository.findByUsername(username);
-        if(user.isEmpty()) return false;
-        if(hashStrategy.check(password, user.get().getPassword())) {
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+            throw new IllegalArgumentException("Usuario o contraseña no pueden estar vacíos");
+        }
+
+        final Optional<User> userOpt = userRepository.findByUsername(username);
+        if (userOpt.isEmpty()) throw new IllegalArgumentException("El usuario no existe");
+
+        if (hashStrategy.check(password, userOpt.get().getPassword())) {
             userRepository.updateLastLogin(username, LocalDateTime.now());
             return true;
         }
+
         return false;
     }
 
@@ -59,6 +66,7 @@ public class UserServiceImpl implements UserService {
      * @return a message indicating the registration result:
      *
      */
+    @Transactional
     public boolean register(final String username, final String password) {
         if (username == null || username.isBlank() || password == null || password.isBlank())
             throw new IllegalArgumentException("Usuario o contraseña no pueden estar vacíos");
@@ -68,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
         final User newUser = new User(username, hashStrategy.hash(password));
         userRepository.save(newUser);
-        throw new IllegalArgumentException("Usuario registrado correctamente");
+        return true;
     }
     /**
      * Deletes a user by username.
@@ -82,12 +90,14 @@ public class UserServiceImpl implements UserService {
      * @param username the username of the user to be deleted
      * @return a message indicating the result of the operation:
      */
+    @Transactional
     public boolean deleteUser(final String username) {
         if (username == null || username.isBlank())
-            return false;
+            throw new IllegalArgumentException("El usuario no pueden estar vacíos");
+
 
         if (userRepository.findByUsername(username).isEmpty())
-            return false;
+            throw new IllegalArgumentException("El usuario no existe");
 
         userRepository.deleteUser(username);
         return true;

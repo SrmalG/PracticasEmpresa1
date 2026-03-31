@@ -1,24 +1,35 @@
 package com.practica.empresa.empresa.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @NotBlank
+    @Size(min = 4, message = "El usuario debe tener al menos 4 caracteres")
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column
-    private LocalDateTime lastLogin;
-    private LocalDateTime createdAt;
+    @NotBlank
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     private String password;
+
+    @Column
+    private LocalDateTime lastLogin;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
 
     public User() {}
 

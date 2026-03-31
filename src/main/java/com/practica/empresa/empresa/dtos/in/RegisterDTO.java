@@ -1,13 +1,13 @@
-package com.practica.empresa.empresa.dtos;
+package com.practica.empresa.empresa.dtos.in;
 
-public class LoginDTO {
+public class RegisterDTO {
 
     private String username;
     private String password;
 
-    public LoginDTO() {}
+    public RegisterDTO() {}
 
-    public LoginDTO(final String username, final String password) {
+    public RegisterDTO(final String username, final String password) {
         this.username = username;
         this.password = password;
     }
