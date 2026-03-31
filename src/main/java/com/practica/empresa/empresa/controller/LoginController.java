@@ -27,14 +27,14 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody final LoginDTO registerDto) {
+    public ResponseEntity<?> login(@RequestBody final LoginDTO loginDTO) {
 
         try {
-            boolean loggedIn = userService.login(registerDto.getUsername(), registerDto.getPassword());
+            boolean loggedIn = userService.login(loginDTO.getUsername(), loginDTO.getPassword());
             return loggedIn
-                    ? ResponseEntity.ok(new LoginDTOOut("Loggedin", registerDto.getUsername() ))
+                    ? ResponseEntity.ok(new LoginDTOOut("Loggedin", loginDTO.getUsername() ))
                     : ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Usuario o contraseña incorrectos");
+                    .body(new LoginDTOOut("Usuario o contraseña incorrecta", loginDTO.getUsername()));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -55,7 +55,7 @@ public class LoginController {
                     ? ResponseEntity.status(HttpStatus.CREATED)
                     .body(new RegisterDTOOut("User created correctly", registerDto.getUsername(), LocalDateTime.now()))
                     : ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error al registrar usuario");
+                    .body(new RegisterDTOOut("Error while register the User", null, null));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

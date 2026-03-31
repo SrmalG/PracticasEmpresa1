@@ -7,4 +7,19 @@ public class DeleteDTOOut {
     public DeleteDTOOut(final String messsage) {
         this.messsage = messsage;
     }
+
+    public String getMesssage() {
+        return messsage;
+    }
+
+    public void setMesssage(String messsage) {
+        this.messsage = messsage;
+    }
+
+    @Override
+    public String toString() {
+        return "DeleteDTOOut{" +
+                "messsage='" + messsage + '\'' +
+                '}';
+    }
 }
