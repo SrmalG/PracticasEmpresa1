@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
 
         if (userRepository.findByUsername(username).isEmpty())
-            throw new IllegalArgumentException("El usuario no existe");
+            return false;
 
         userRepository.deleteUser(username);
         return true;

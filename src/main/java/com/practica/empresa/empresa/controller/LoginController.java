@@ -71,8 +71,8 @@ public class LoginController {
             final boolean result = userService.deleteUser(request.getUsername());
             return result
                     ? ResponseEntity.ok(new DeleteDTOOut("User deleted correctly"))
-                    : ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("No se pudo eliminar el usuario");
+                    : ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new GenericResponse(false, "Usuario no encontrado", null));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new GenericResponse(false, e.getMessage(), null));
