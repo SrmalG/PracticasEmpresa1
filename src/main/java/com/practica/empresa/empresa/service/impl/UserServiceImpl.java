@@ -37,20 +37,34 @@ public class UserServiceImpl implements UserService {
      * @return {@code false} if no user with the given username exists;
      *         {@code true} otherwise
      */
+    @Transactional
     public boolean login(final String username, final String password) {
-        if (username == null || username.isBlank() || password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Usuario o contraseña no pueden estar vacíos");
-        }
-
-        final Optional<User> userOpt = userRepository.findByUsername(username);
-        if (userOpt.isEmpty()) throw new IllegalArgumentException("El usuario no existe");
-
-        if (hashStrategy.check(password, userOpt.get().getPassword())) {
-            userRepository.updateLastLogin(username, LocalDateTime.now());
+        final Optional<User> userOpt = getUser(username);
+        if (userOpt.isPresent() && hashStrategy.check(password, userOpt.get().getPassword())) {
+            updateLastLogin(username);
             return true;
         }
-
         return false;
+    }
+
+    @Transactional
+    public void updateLastLogin(final String username) {
+        userRepository.updateLastLogin(username, LocalDateTime.now());
+    }
+
+    /**
+     * Retrieves a user by their username.
+     *
+     * <p>This method performs read-only operations on the database,
+     * therefore it is marked with {@code readOnly = true} to optimize
+     * transaction performance.</p>
+     *
+     * @param username the username to search for (must not be {@code null} or blank)
+     * @return the {@link User} associated with the given username
+     */
+    @Transactional(readOnly = true)
+    public Optional<User> getUser(final String username) {
+        return userRepository.findByUsername(username);
     }
 
     /**
@@ -67,14 +81,11 @@ public class UserServiceImpl implements UserService {
      *
      */
     @Transactional
-    public boolean register(final String username, final String password) {
-        if (username == null || username.isBlank() || password == null || password.isBlank())
-            throw new IllegalArgumentException("Usuario o contraseña no pueden estar vacíos");
+    public boolean register(final String username, final String password, final String email) {
+        if (getUser(username).isPresent())
+            return false;
 
-        if (userRepository.findByUsername(username).isPresent())
-            throw new IllegalArgumentException("El usuario ya existe");
-
-        final User newUser = new User(username, hashStrategy.hash(password));
+        final User newUser = new User(username, hashStrategy.hash(password), email);
         userRepository.save(newUser);
         return true;
     }
@@ -92,15 +103,11 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     public boolean deleteUser(final String username) {
-        if (username == null || username.isBlank())
-            throw new IllegalArgumentException("El usuario no pueden estar vacíos");
-
-
-        if (userRepository.findByUsername(username).isEmpty())
+        if (getUser(username).isEmpty())
             return false;
 
-        userRepository.deleteUser(username);
-        return true;
+        final int updatedRows = userRepository.deleteUser(username);
+        return updatedRows != 0;
     }
 
 }

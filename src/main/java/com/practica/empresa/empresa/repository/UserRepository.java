@@ -11,15 +11,16 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
     Optional<User> findByUsername(final String username);
 
     @Modifying
     @Transactional
     @Query(Sql.UPDATE_LAST_LOGIN)
-    void updateLastLogin(final String username, final LocalDateTime lastLogin);
+    int updateLastLogin(final String username, final LocalDateTime lastLogin);
 
     @Modifying
     @Transactional
     @Query(Sql.ERASE_USER)
-    void deleteUser(final String username);
+    int deleteUser(final String username);
 }

@@ -9,6 +9,7 @@ import com.practica.empresa.empresa.dtos.out.DeleteDTOOut;
 import com.practica.empresa.empresa.dtos.out.LoginDTOOut;
 import com.practica.empresa.empresa.dtos.out.RegisterDTOOut;
 import com.practica.empresa.empresa.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -28,54 +29,49 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody final LoginDTO loginDTO) {
+    public ResponseEntity<?> login(@Valid @RequestBody final LoginDTO loginDTO) {
 
         try {
             boolean loggedIn = userService.login(loginDTO.getUsername(), loginDTO.getPassword());
             return loggedIn
-                    ? ResponseEntity.ok(new LoginDTOOut("Loggedin", loginDTO.getUsername() ))
+                    ? ResponseEntity.ok(new LoginDTOOut("Logged-in", loginDTO.getUsername() ))
                     : ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginDTOOut("Usuario o contraseña incorrecta", loginDTO.getUsername()));
+                    .body(new LoginDTOOut("User or password wrong", loginDTO.getUsername()));
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new GenericResponse(false, e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(new GenericResponse(false, e.getMessage(), null));
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody final RegisterDTO registerDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody final RegisterDTO registerDto) {
         try {
             final boolean result = userService.register(
                     registerDto.getUsername(),
-                    registerDto.getPassword()
+                    registerDto.getPassword(),
+                    registerDto.getEmail()
             );
 
             return result
                     ? ResponseEntity.status(HttpStatus.CREATED)
                     .body(new RegisterDTOOut("User created correctly", registerDto.getUsername(), LocalDateTime.now()))
                     : ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new RegisterDTOOut("Error while register the User", null, null));
+                    .body(new RegisterDTOOut("User already exists", null, null));
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new GenericResponse(false, e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(new GenericResponse(false, e.getMessage(), null));
         }
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestBody final DeleteUserDTO request) {
+    public ResponseEntity<?> deleteUser(@Valid @RequestBody final DeleteUserDTO request) {
         try {
             final boolean result = userService.deleteUser(request.getUsername());
             return result
                     ? ResponseEntity.ok(new DeleteDTOOut("User deleted correctly"))
                     : ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new GenericResponse(false, "Usuario no encontrado", null));
+                    .body(new GenericResponse(false, "User not found", null));
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new GenericResponse(false, e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

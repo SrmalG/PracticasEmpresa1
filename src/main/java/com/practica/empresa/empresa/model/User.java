@@ -1,6 +1,7 @@
 package com.practica.empresa.empresa.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -30,15 +31,18 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(unique = true, nullable = false)
+    @Email
+    private String email;
 
     public User() {}
 
-
-    public User(final String username, final String password) {
+    public User(final String username, final String password, final String email) {
         this.username = username;
         this.password = password;
         this.createdAt = LocalDateTime.now();
         this.lastLogin = LocalDateTime.now();
+        this.email = email;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -65,5 +69,9 @@ public class User {
 
     public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
