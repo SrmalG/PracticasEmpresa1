@@ -24,4 +24,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(new GenericResponse(false, ex.getMessage(), null));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<GenericResponse> handleOtherIllegalExceptions(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
+                .body(new GenericResponse(false, ex.getMessage(), null));
+    }
 }

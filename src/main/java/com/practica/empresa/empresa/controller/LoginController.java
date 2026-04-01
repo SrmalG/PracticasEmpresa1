@@ -1,6 +1,5 @@
 package com.practica.empresa.empresa.controller;
 
-
 import com.practica.empresa.empresa.dtos.GenericResponse;
 import com.practica.empresa.empresa.dtos.in.DeleteUserDTO;
 import com.practica.empresa.empresa.dtos.in.LoginDTO;
@@ -10,8 +9,6 @@ import com.practica.empresa.empresa.dtos.out.LoginDTOOut;
 import com.practica.empresa.empresa.dtos.out.RegisterDTOOut;
 import com.practica.empresa.empresa.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,66 +17,68 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin
 public class LoginController {
 
-    @Autowired
-    @Qualifier("userServiceImpl")
-    private UserService userService;
+    private final UserService userService;
 
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody final LoginDTO loginDTO) {
-
         try {
-            boolean loggedIn = userService.login(loginDTO.getUsername(), loginDTO.getPassword());
-            return loggedIn
-                    ? ResponseEntity.ok(new LoginDTOOut("Logged-in", loginDTO.getUsername() ))
-                    : ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginDTOOut("User or password wrong", loginDTO.getUsername()));
+            final String jwt = userService.login(loginDTO.getUsername(), loginDTO.getPassword());
 
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new GenericResponse(false, e.getMessage(), null));
+            final LoginDTOOut response = new LoginDTOOut(
+                    "Logged-in successfully",
+                    loginDTO.getUsername(),
+                    jwt
+            );
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(new GenericResponse(false, "Usuario o contraseña inválidas", null));
         }
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody final RegisterDTO registerDto) {
-        try {
             final boolean result = userService.register(
                     registerDto.getUsername(),
                     registerDto.getPassword(),
                     registerDto.getEmail()
             );
 
-            return result
-                    ? ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new RegisterDTOOut("User created correctly", registerDto.getUsername(), LocalDateTime.now()))
-                    : ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new RegisterDTOOut("User already exists", null, null));
+            if (result) {
+                final RegisterDTOOut response = new RegisterDTOOut(
+                        "User created successfully",
+                        registerDto.getUsername(),
+                        LocalDateTime.now()
+                );
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            } else {
+                return ResponseEntity.badRequest()
+                        .body(new RegisterDTOOut("User already exists", null, null));
+            }
 
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new GenericResponse(false, e.getMessage(), null));
         }
-    }
 
     @DeleteMapping("/delete")
+ //   @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@Valid @RequestBody final DeleteUserDTO request) {
-        try {
+
             final boolean result = userService.deleteUser(request.getUsername());
-            return result
-                    ? ResponseEntity.ok(new DeleteDTOOut("User deleted correctly"))
-                    : ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new GenericResponse(false, "User not found", null));
 
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            if (result) {
+                return ResponseEntity.ok(new DeleteDTOOut("User deleted correctly"));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new GenericResponse(false, "User not found", null));
+            }
         }
-    }
-
-
-
-
 
 
 }

@@ -2,6 +2,7 @@ package com.practica.empresa.empresa.service.impl;
 
 
 import com.practica.empresa.empresa.model.User;
+import com.practica.empresa.empresa.security.jwt.JwtUtil;
 import com.practica.empresa.empresa.security.password.HashStrategy;
 import com.practica.empresa.empresa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final HashStrategy hashStrategy;
+    private final JwtUtil jwtUtil;
+
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository, final HashStrategy hashStrategy) {
+    public UserServiceImpl(final UserRepository userRepository, final HashStrategy hashStrategy, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.hashStrategy = hashStrategy;
+        this.jwtUtil = jwtUtil;
     }
     /**
      * Attempts to log in a user with the given credentials.
@@ -38,13 +42,13 @@ public class UserServiceImpl implements UserService {
      *         {@code true} otherwise
      */
     @Transactional
-    public boolean login(final String username, final String password) {
+    public String login(final String username, final String password) {
         final Optional<User> userOpt = getUser(username);
         if (userOpt.isPresent() && hashStrategy.check(password, userOpt.get().getPassword())) {
             updateLastLogin(username);
-            return true;
+            return jwtUtil.generateToken(username);
         }
-        return false;
+        throw new IllegalArgumentException("Error Credentials");
     }
 
     @Transactional
@@ -62,6 +66,7 @@ public class UserServiceImpl implements UserService {
      * @param username the username to search for (must not be {@code null} or blank)
      * @return the {@link User} associated with the given username
      */
+    @Override
     @Transactional(readOnly = true)
     public Optional<User> getUser(final String username) {
         return userRepository.findByUsername(username);
