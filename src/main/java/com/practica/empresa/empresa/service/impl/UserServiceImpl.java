@@ -2,7 +2,7 @@ package com.practica.empresa.empresa.service.impl;
 
 
 import com.practica.empresa.empresa.model.User;
-import com.practica.empresa.empresa.security.HashStrategy;
+import com.practica.empresa.empresa.security.password.HashStrategy;
 import com.practica.empresa.empresa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

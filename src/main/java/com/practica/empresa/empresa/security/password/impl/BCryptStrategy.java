@@ -1,6 +1,6 @@
-package com.practica.empresa.empresa.security.impl;
+package com.practica.empresa.empresa.security.password.impl;
 
-import com.practica.empresa.empresa.security.HashStrategy;
+import com.practica.empresa.empresa.security.password.HashStrategy;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class BCryptStrategy implements HashStrategy {
