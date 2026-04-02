@@ -13,4 +13,6 @@ public interface UserService {
     boolean deleteUser(final String username);
 
     Optional<User> getUser(final String username);
+
+    boolean userExists(final String userName, final String email);
 }

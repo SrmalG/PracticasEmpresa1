@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUser(final String username) {
         return userRepository.findByUsername(username);
     }
-
+    @Override
     @Transactional(readOnly = true)
     public boolean userExists(final String userName, final String email) {
         return userRepository.existsByUsernameOrEmail(userName, email);
