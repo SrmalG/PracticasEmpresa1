@@ -1,7 +1,7 @@
-package com.practica.empresa.empresa.security;
+package com.practica.empresa.empresa.security.password;
 
-import com.practica.empresa.empresa.security.impl.BCryptStrategy;
-import com.practica.empresa.empresa.security.impl.ShaStrategy;
+import com.practica.empresa.empresa.security.password.impl.BCryptStrategy;
+import com.practica.empresa.empresa.security.password.impl.ShaStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

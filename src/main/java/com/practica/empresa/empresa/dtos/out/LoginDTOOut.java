@@ -4,10 +4,12 @@ public class LoginDTOOut {
 
     private String message;
     private String user;
+    private String jwt;
 
-    public LoginDTOOut(final String message, final String user) {
+    public LoginDTOOut(final String message, final String user, final String jwt) {
         this.message = message;
         this.user = user;
+        this.jwt = jwt;
     }
 
     public String getMessage() {
@@ -24,6 +26,14 @@ public class LoginDTOOut {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 
     @Override

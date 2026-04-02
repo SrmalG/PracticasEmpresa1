@@ -5,11 +5,22 @@ meta {
 }
 
 delete {
-  url: http://localhost:8080/api/delete
-  body: none
-  auth: inherit
+  url: http://localhost:8080/api/v1/delete
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMzNDQiLCJpYXQiOjE3NzUxNDg4OTIsImV4cCI6MTc3NTE3NzY5Mn0.hJqOv4R9ZsX36ZQCT3U36afvCHtu8yn2XbEvy33mZfM
+}
+
+body:json {
+  {
+    "username" : "123344"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

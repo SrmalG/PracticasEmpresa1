@@ -1,6 +1,6 @@
 package com.practica.empresa.empresa;
 
-import com.practica.empresa.empresa.security.impl.BCryptStrategy;
+import com.practica.empresa.empresa.security.password.impl.BCryptStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

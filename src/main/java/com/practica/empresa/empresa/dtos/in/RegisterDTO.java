@@ -2,6 +2,7 @@ package com.practica.empresa.empresa.dtos.in;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegisterDTO {
@@ -16,6 +17,22 @@ public class RegisterDTO {
 
     @Email(message = "Invalid email")
     private String email;
+
+    @Pattern(regexp = "^(USER|ADMIN)$",
+            message = "El rol solo puede ser USER o ADMIN")
+    private String rol;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
 
     public RegisterDTO() {}
 

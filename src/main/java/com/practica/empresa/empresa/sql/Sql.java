@@ -11,5 +11,5 @@ public class Sql {
     """);
 
     public static final String ERASE_USER = "Delete from User u where u.username = :username";
-}
 
+}

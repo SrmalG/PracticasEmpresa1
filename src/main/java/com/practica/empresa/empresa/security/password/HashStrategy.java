@@ -1,4 +1,4 @@
-package com.practica.empresa.empresa.security;
+package com.practica.empresa.empresa.security.password;
 
 public interface HashStrategy {
 

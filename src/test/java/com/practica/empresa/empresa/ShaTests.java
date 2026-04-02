@@ -1,6 +1,6 @@
 package com.practica.empresa.empresa;
 
-import com.practica.empresa.empresa.security.impl.ShaStrategy;
+import com.practica.empresa.empresa.security.password.impl.ShaStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
