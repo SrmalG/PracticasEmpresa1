@@ -21,11 +21,15 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         return userService.getUser(username)
-                .map(user -> org.springframework.security.core.userdetails.User
-                        .withUsername(user.getUsername())
-                        .password(user.getPassword())
-                        .roles("USER")                    // Preparado para futuro (roles)
-                        .build())
+                .map(user -> {
+                    // Obtenemos el rol único del usuario (asumiendo que tienes un getter getRole())
+                    String role = user.getRol();   // Ej: "ADMIN" o "USER"
+                    return org.springframework.security.core.userdetails.User
+                            .withUsername(user.getUsername())
+                            .password(user.getPassword())
+                            .roles(role.toUpperCase())     // Spring añade automáticamente "ROLE_"
+                            .build();
+                })
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
     }
 }

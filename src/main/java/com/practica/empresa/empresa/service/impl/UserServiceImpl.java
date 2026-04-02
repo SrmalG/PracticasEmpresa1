@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+    @Transactional(readOnly = true)
+    public boolean userExists(final String userName, final String email) {
+        return userRepository.existsByUsernameOrEmail(userName, email);
+    }
+
     /**
      * Registers a new user in the system.
      *
@@ -86,11 +91,11 @@ public class UserServiceImpl implements UserService {
      *
      */
     @Transactional
-    public boolean register(final String username, final String password, final String email) {
-        if (getUser(username).isPresent())
+    public boolean register(final String username, final String password, final String email, final String rol) {
+        if (userExists(username,email))
             return false;
 
-        final User newUser = new User(username, hashStrategy.hash(password), email);
+        final User newUser = new User(username, hashStrategy.hash(password), email, rol);
         userRepository.save(newUser);
         return true;
     }

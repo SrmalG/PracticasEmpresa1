@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,14 +34,31 @@ public class User {
     @Email
     private String email;
 
+    @Column(nullable = false)
+    private String rol = "USER";
+
+
     public User() {}
 
-    public User(final String username, final String password, final String email) {
+    public User(final String username, final String password, final String email, final String rol) {
         this.username = username;
         this.password = password;
         this.createdAt = LocalDateTime.now();
         this.lastLogin = LocalDateTime.now();
         this.email = email;
+        this.rol = rol == null ? "USER" : rol;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public LocalDateTime getCreatedAt() {

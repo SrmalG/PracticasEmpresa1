@@ -11,6 +11,7 @@ import com.practica.empresa.empresa.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -49,7 +50,8 @@ public class LoginController {
             final boolean result = userService.register(
                     registerDto.getUsername(),
                     registerDto.getPassword(),
-                    registerDto.getEmail()
+                    registerDto.getEmail(),
+                    registerDto.getRol()
             );
 
             if (result) {
@@ -61,13 +63,13 @@ public class LoginController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
             } else {
                 return ResponseEntity.badRequest()
-                        .body(new RegisterDTOOut("User already exists", null, null));
+                        .body(new RegisterDTOOut("User or email already exists", null, null));
             }
 
         }
 
     @DeleteMapping("/delete")
- //   @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@Valid @RequestBody final DeleteUserDTO request) {
 
             final boolean result = userService.deleteUser(request.getUsername());

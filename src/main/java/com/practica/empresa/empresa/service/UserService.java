@@ -8,7 +8,7 @@ public interface UserService {
 
     String login(final String username, final String password);
 
-    boolean register(final String username, final String password, final String email);
+    boolean register(final String username, final String password, final String email, final String rol);
 
     boolean deleteUser(final String username);
 

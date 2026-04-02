@@ -11,5 +11,9 @@ public class Sql {
     """);
 
     public static final String ERASE_USER = "Delete from User u where u.username = :username";
-}
 
+    public static final String EXISTS_USER = ("""
+        SELECT u FROM User u 
+        WHERE u.username = :username OR u.email = :email
+    """);
+}
